@@ -1,79 +1,130 @@
-#include <GL/glut.h>
-#include <iostream>
-#include <cstdlib> 
-
-int x_start, y_start, x_end, y_end;
-
-void drawLineBresenham(int x1, int y1, int x2, int y2) 
-{
-    int dx = abs(x2 - x1);
-    int dy = abs(y2 - y1);
-
-    int x = x1;
-    int y = y1;
-
-    int x_step = (x2 > x1) ? 1 : -1;
-    int y_step = (y2 > y1) ? 1 : -1;
-
-    int is_steep = dy > dx;
-
-    if (is_steep) 
-    {
-        std::swap(dx, dy);
-    }
-
-    int p = 2 * dy - dx;
-
-    glBegin(GL_POINTS);
-    for (int i = 0; i <= dx; i++) 
-    {
-        glVertex2i(x, y);
-        if (p < 0) 
-        {
-            p += 2 * dy;
-        } else 
-        {
-            if (is_steep)
-                x += x_step;
-            else
-                y += y_step;
-            p += 2 * (dy - dx);
-        }
-
-        if (is_steep)
-            y += y_step;
-        else
-            x += x_step;
-    }
-    glEnd();
+//Bresenhams line drawing algorithm
+ #include<GL/glut.h>
+ #include<iostream>
+ #include<stdlib.h>
+ using namespace std;
+ int x1,x2,y1,y2;
+ void simpleline();
+ void Dashedline(); 
+void Dottedline();
+ float dy,dx,e,i,x,y;
+ void display()
+ {
+ cout<<"\nSimple Line\n";
+ simpleline();
+ cout<<"\nDashed Line\n";
+ Dashedline();
+ cout<<"\nDotted Line\n";
+ Dottedline();
+ }
+ void simpleline ()
+ {
+ cout<<"Enter the value of x1,y1:";
+ cin>>x1>>y1;
+ cout<<"Enter the value of x2,y2:";
+ cin>>x2>>y2;
+ dx=x2-x1;
+ dy=y2-y1;
+ e = 2*dy - dx;
+ x=x1;
+ y=y1;
+ glClear (GL_COLOR_BUFFER_BIT);
+ glColor3f (0.0, 1.0, 0.0);
+ glBegin(GL_POINTS);
+ glVertex2i(x,y);
+int i;
+ for(i=0;i<dx;i++)
+ {
+ if(e>0)
+ {
+ y = y+1;
+ e=e-2*dx;
+ }
+ x = x+1;
+ e=e+2*dy;
+ glVertex2i(x,y);
+ }
+ glEnd();
+ glFlush();
+ }
+ void Dottedline ()
+ {
+ cout<<"Enter the value of x1,y1:";
+ cin>>x1>>y1;
+ cout<<"Enter the value of x2,y2:";
+ cin>>x2>>y2;
+ dx=x2-x1;
+ dy=y2-y1;
+ e = 2*dy - dx;
+ x=x1;
+ y=y1;
+ glClear (GL_COLOR_BUFFER_BIT);
+ glColor3f (0.0, 1.0, 0.0);
+ glBegin(GL_POINTS);
+ glVertex2i(x,y);
+ int i;
+ for(i=0;i<dx;i++)
+ {
+if(e>0)
+ {
+ y = y+1;
+ e=e-2*dx;
+ }
+ x = x+1;
+ e=e+2*dy;
+ if(i%2==0)
+ glVertex2i(x,y);
+ }
+ glEnd();
+ glFlush();
+ }
+ void Dashedline ()
+ {
+ cout<<"Enter the value of x1,y1:";
+ cin>>x1>>y1;
+ cout<<"Enter the value of x2,y2:";
+ cin>>x2>>y2;
+ dx=x2-x1;
+ dy=y2-y1;
+ e = 2*dy - dx;
+ x=x1;
+ y=y1;
+ glClear (GL_COLOR_BUFFER_BIT);
+ glColor3f (0.0, 1.0, 0.0);
+ glBegin(GL_POINTS);
+ glVertex2i(x,y);
+ int i;
+ for(i=0;i<dx;i++)
+ {
+ if(e>0)
+ {
+ y = y+1;
 }
-
-void display() 
-{
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(0.0, 0.0, 1.0); 
-    drawLineBresenham(x_start, y_start, x_end, y_end);
-    glFlush();
-}
-
-int main(int argc, char** argv) 
-{
-    std::cout << "Enter start point (x y): ";
-    std::cin >> x_start >> y_start;
-
-    std::cout << "Enter end point (x y): ";
-    std::cin >> x_end >> y_end;
-
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(500, 500);
-    glutInitWindowPosition(100, 100);
-    glutCreateWindow("Bresenham Line - C++");
-
-    glClearColor(1.0, 1.0, 1.0, 1.0); // White background
-    gluOrtho2D(0, 500, 0, 500);       // 2D orthographic projection
-
-    glutDisplayFunc(display);
-    glutMainLoop();
-    return 0;
-}
+ e=e-2*dx;
+ x = x+1;
+ e=e+2*dy;
+ if(i%5==0)
+ glVertex2i(x,y);
+ }
+ glEnd();
+ glFlush();
+ }
+ void init(void)
+ {
+ glClearColor (0.0, 0.0, 0.0, 0.0);
+ glMatrixMode(GL_PROJECTION);
+ glLoadIdentity();
+ gluOrtho2D(-100.0, 100.0, -100.0, 100.0);
+ }
+ int main(int argc, char** argv)
+ {
+ glutInit(&argc, argv);
+ glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+ glutInitWindowSize (500, 500);
+ glutInitWindowPosition (100, 100);
+ glutCreateWindow ("Breshanman Line Algorithm ");
+ init ();
+ glutDisplayFunc(display);
+ glutMainLoop();
+ return 0;
+ }
